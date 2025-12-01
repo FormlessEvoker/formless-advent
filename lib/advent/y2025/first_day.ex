@@ -27,14 +27,16 @@ defmodule Advent.Y2025.FirstDay do
   end
 
   defp parse_data(lines) when is_list(lines) do
-    lines
-    |> Enum.map(&parse_line/1)
-    |> then(
-      &case Keyword.get(&1, :error) do
-        nil -> {:ok, &1}
-        error -> {:error, error}
+    Enum.reduce_while(lines, [], fn line, acc ->
+      case parse_line(line) do
+        {:error, msg} -> {:halt, {:error, msg}}
+        parsed -> {:cont, [parsed | acc]}
       end
-    )
+    end)
+    |> case do
+      {:error, msg} -> {:error, msg}
+      results -> {:ok, Enum.reverse(results)}
+    end
   end
 
   defp parse_line(<<"L", distance::binary>>) do
