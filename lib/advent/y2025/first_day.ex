@@ -12,7 +12,8 @@ defmodule Advent.Y2025.FirstDay do
 
   ## Returns
 
-    - `:ok` for now (placeholder return value)
+    - `{:ok, turns}` where `turns` is a list of parsed turns (e.g., `{:left, 50}` or `{:right, 14}`) on success
+    - `{:error, reason}` on failure
 
   ## Examples
 
