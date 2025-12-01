@@ -53,4 +53,40 @@ defmodule Advent.DataTest do
       assert {:error, :enoent} = result
     end
   end
+
+  describe "load!/1" do
+    test "loads data from sample file successfully" do
+      lines = Data.load!(Advent.Y2025.FirstDay)
+      assert is_list(lines)
+
+      for line <- lines do
+        assert is_binary(line)
+      end
+    end
+
+    test "raises File.Error for non-existent module" do
+      assert_raise File.Error, fn ->
+        Data.load!(Advent.Y2025.NonExistent)
+      end
+    end
+  end
+
+  describe "load!/2" do
+    test "loads data from the specified file successfully" do
+      dummy_contents = Data.load!(Advent.Y2025.Test, filename: "dummy_file.dat")
+      assert ["I'm a little teapot"] == dummy_contents
+    end
+
+    test "raises ArgumentError when attempting to pass a filepath" do
+      assert_raise ArgumentError, ~r/Passing a path to a data file is prohibited/, fn ->
+        Data.load!(Advent.Y2025.FirstDay, filename: "../../../../etc/passwd")
+      end
+    end
+
+    test "raises File.Error when file does not exist" do
+      assert_raise File.Error, fn ->
+        Data.load!(Advent.Y2025.FirstDay, filename: "fake_file.datum")
+      end
+    end
+  end
 end

@@ -41,11 +41,17 @@ defmodule Advent.Y2025.FirstDay do
   end
 
   defp parse_line(<<"L", distance::binary>>) do
-    {:left, String.to_integer(distance)}
+    case Integer.parse(distance) do
+      {int, ""} -> {:left, int}
+      _ -> {:error, "Invalid distance for left turn: \"#{distance}\""}
+    end
   end
 
   defp parse_line(<<"R", distance::binary>>) do
-    {:right, String.to_integer(distance)}
+    case Integer.parse(distance) do
+      {int, ""} -> {:right, int}
+      _ -> {:error, "Invalid distance for right turn: \"#{distance}\""}
+    end
   end
 
   defp parse_line({:error, _} = err), do: err

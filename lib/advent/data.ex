@@ -51,8 +51,17 @@ defmodule Advent.Data do
 
   def load!(module_name, opts \\ []) do
     case load(module_name, opts) do
-      {:ok, content} -> content
-      {:error, reason} -> raise reason
+      {:ok, content} ->
+        content
+
+      {:error, "Passing a path to a data file is prohibited. Must pass only the filename."} =
+          error ->
+        raise ArgumentError, elem(error, 1)
+
+      {:error, reason} ->
+        filename = Keyword.get(opts, :filename, @default_filename)
+        file_path = module_to_path(module_name, filename)
+        raise File.Error, reason: reason, action: "read file", path: file_path
     end
   end
 
@@ -95,12 +104,13 @@ defmodule Advent.Data do
   end
 
   defp validate_filename(filename) when is_binary(filename) do
-    case String.contains?(filename, ["\\", "/"]) do
-      true ->
-        {:error, "Passing a path to a data file is prohibited. Must pass only the filename."}
-
-      false ->
-        {:ok, filename}
+    # Only allow alphanumeric characters, underscores, hyphens, dots, and spaces
+    # This prevents path traversal while allowing reasonable filenames
+    if String.match?(filename, ~r/^[a-zA-Z0-9_\-. ]+$/) and
+         not String.contains?(filename, ["\\", "/", ".."]) do
+      {:ok, filename}
+    else
+      {:error, "Passing a path to a data file is prohibited. Must pass only the filename."}
     end
   end
 
