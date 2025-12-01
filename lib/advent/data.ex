@@ -55,7 +55,10 @@ defmodule Advent.Data do
   def load!(module_name, opts \\ []) do
     case load(module_name, opts) do
       {:ok, content} -> content
-      {:error, reason} -> raise reason
+      {:error, reason} ->
+        filename = Keyword.get(opts, :filename, @default_filename)
+        file_path = module_to_path(module_name, filename)
+        raise File.Error.exception(reason: reason, action: "read file", path: file_path)
     end
   end
 
