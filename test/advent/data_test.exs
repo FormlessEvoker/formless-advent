@@ -39,7 +39,7 @@ defmodule Advent.DataTest do
 
   describe "load/2" do
     test "loads data from the specified file" do
-      {:ok, dummy_contents} = Data.load(Advent.Y2025.Test, filename: "dummy_file.dat")
+      {:ok, dummy_contents} = Data.load(Advent.Y2025.NthDay, filename: "teapot.dat")
       assert ["I'm a little teapot"] == dummy_contents
     end
 
@@ -73,7 +73,7 @@ defmodule Advent.DataTest do
 
   describe "load!/2" do
     test "loads data from the specified file successfully" do
-      dummy_contents = Data.load!(Advent.Y2025.Test, filename: "dummy_file.dat")
+      dummy_contents = Data.load!(Advent.Y2025.NthDay, filename: "teapot.dat")
       assert ["I'm a little teapot"] == dummy_contents
     end
 

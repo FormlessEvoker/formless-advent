@@ -9,10 +9,8 @@ defmodule AdventTest do
   end
 
   describe "run/2" do
-    test "loads and solves a puzzle with custom filename" do
-      result = Advent.run(Y2025.FirstDay, "test_input.dat")
-      assert {:ok, turns} = result
-      assert turns == [{:left, 10}, {:right, 20}, {:left, 30}]
+    test "Runs the specified module with the specified dataset" do
+      assert {:ok, ["I'm a little teapot"]} = Advent.run(Y2025.NthDay, "teapot.dat")
     end
   end
 end
