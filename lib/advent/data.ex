@@ -1,7 +1,13 @@
 defmodule Advent.Data do
   @moduledoc """
   Module for loading puzzle input data.
+
+  This module converts Advent of Code module names to file paths and loads
+  the corresponding data files. Module names must follow the convention:
+  `Advent.Y<YEAR>.<DayName>` (e.g., `Advent.Y2025.FirstDay`).
   """
+
+  @default_filename "sample.dat"
 
   @doc """
   Loads puzzle data for a given module.
@@ -12,6 +18,8 @@ defmodule Advent.Data do
   ## Parameters
 
     - module_name: The module atom (e.g., `Advent.Y2025.FirstDay`)
+    - opts: Keyword list of options
+      - `:filename` - The data file name to load (default: "#{@default_filename}")
 
   ## Returns
 
@@ -23,9 +31,13 @@ defmodule Advent.Data do
       iex> Advent.Data.load(Advent.Y2025.FirstDay)
       {:ok, ["sample line 1", "sample line 2", "sample line 3"]}
 
+      iex> Advent.Data.load(Advent.Y2025.FirstDay, filename: "input.dat")
+      {:error, :enoent}
+
   """
-  def load(module_name) when is_atom(module_name) do
-    file_path = module_to_path(module_name)
+  def load(module_name, opts \\ []) when is_atom(module_name) do
+    filename = Keyword.get(opts, :filename, @default_filename)
+    file_path = module_to_path(module_name, filename)
 
     case File.read(file_path) do
       {:ok, content} ->
@@ -44,9 +56,14 @@ defmodule Advent.Data do
   @doc """
   Converts a module name to a file path.
 
+  Expects module names in the format `Advent.Y<YEAR>.<DayName>` where:
+  - `Y<YEAR>` is converted to `y_<year>` (e.g., `Y2025` -> `y_2025`)
+  - `<DayName>` is converted to snake_case (e.g., `FirstDay` -> `first_day`)
+
   ## Parameters
 
     - module_name: The module atom (e.g., `Advent.Y2025.FirstDay`)
+    - filename: The data file name (default: "sample.dat")
 
   ## Returns
 
@@ -57,19 +74,22 @@ defmodule Advent.Data do
       iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay)
       "data/y_2025/first_day/sample.dat"
 
+      iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay, "input.dat")
+      "data/y_2025/first_day/input.dat"
+
   """
-  def module_to_path(module_name) do
+  def module_to_path(module_name, filename \\ @default_filename) do
     module_name
     |> Module.split()
     # Drop "Advent" prefix
     |> Enum.drop(1)
     |> Enum.map(&convert_part/1)
-    |> then(fn parts -> ["data" | parts] ++ ["sample.dat"] end)
+    |> then(fn parts -> ["data" | parts] ++ [filename] end)
     |> Path.join()
   end
 
   # Convert module name parts to file path segments
-  # Y2025 -> y_2025
+  # Y2025 -> y_2025 (handles year format starting with 'Y')
   # FirstDay -> first_day
   defp convert_part("Y" <> year) do
     "y_" <> String.downcase(year)
