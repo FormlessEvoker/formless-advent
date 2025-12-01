@@ -10,7 +10,13 @@ defmodule Advent.Y2025.FirstDayTest do
     end
 
     test "returns :ok for list with strings" do
-      assert FirstDay.solve(["line1", "line2"]) == :ok
+      # assert FirstDay.solve(["L50", "R99"]) == :ok
+
+      assert FirstDay.solve(["L7", "weanies"]) == :ok
     end
+
+    # test "raises when input is bad" do
+    #   assert_raise
+    # end
   end
 end

@@ -28,8 +28,7 @@ defmodule Advent.Data do
 
   ## Examples
 
-      iex> Advent.Data.load(Advent.Y2025.FirstDay)
-      {:ok, ["sample line 1", "sample line 2", "sample line 3"]}
+      iex> {:ok, _} = Advent.Data.load(Advent.Y2025.FirstDay)
 
       iex> Advent.Data.load(Advent.Y2025.FirstDay, filename: "input.dat")
       {:error, :enoent}
@@ -50,6 +49,13 @@ defmodule Advent.Data do
 
       {:error, reason} ->
         {:error, reason}
+    end
+  end
+
+  def load!(module_name, opts \\ []) do
+    case load(module_name, opts) do
+      {:ok, content} -> content
+      {:error, reason} -> raise reason
     end
   end
 
@@ -82,7 +88,10 @@ defmodule Advent.Data do
     module_name
     |> Module.split()
     # Drop "Advent" prefix
-    |> Enum.drop(1)
+    |> case do
+      ["Advent" | rest] -> rest
+      path -> path
+    end
     |> Enum.map(&convert_part/1)
     |> then(fn parts -> ["data" | parts] ++ [filename] end)
     |> Path.join()

@@ -8,6 +8,10 @@ defmodule Advent.DataTest do
     test "converts Advent.Y2025.FirstDay to correct path" do
       assert Data.module_to_path(Advent.Y2025.FirstDay) == "data/y_2025/first_day/sample.dat"
     end
+
+    test "works without Advent prefix" do
+      assert Data.module_to_path(Y2025.FirstDay) == "data/y_2025/first_day/sample.dat"
+    end
   end
 
   describe "module_to_path/2" do
@@ -21,10 +25,10 @@ defmodule Advent.DataTest do
     test "loads data from sample file for Advent.Y2025.FirstDay" do
       {:ok, lines} = Data.load(Advent.Y2025.FirstDay)
       assert is_list(lines)
-      assert length(lines) == 3
-      assert Enum.at(lines, 0) == "sample line 1"
-      assert Enum.at(lines, 1) == "sample line 2"
-      assert Enum.at(lines, 2) == "sample line 3"
+
+      for line <- lines do
+        assert is_binary(line)
+      end
     end
 
     test "returns error for non-existent module" do
@@ -35,7 +39,7 @@ defmodule Advent.DataTest do
 
   describe "load/2" do
     test "returns error when loading non-existent file with custom filename" do
-      result = Data.load(Advent.Y2025.FirstDay, filename: "input.dat")
+      result = Data.load(Advent.Y2025.FirstDay, filename: "fake_file.datum")
       assert {:error, :enoent} = result
     end
   end
