@@ -38,6 +38,16 @@ defmodule Advent.DataTest do
   end
 
   describe "load/2" do
+    test "loads data from the specified file" do
+      {:ok, dummy_contents} = Data.load(Advent.Y2025.Test, filename: "dummy_file.dat")
+      assert ["I'm a little teapot"] == dummy_contents
+    end
+
+    test "returns an error when attempting to pass a filepath instead of just a file name" do
+      assert {:error, "Passing a path to a data file is prohibited. Must pass only the filename."} =
+               Data.load(Advent.Y2025.FirstDay, filename: "../../../../etc/passwd")
+    end
+
     test "returns error when loading non-existent file with custom filename" do
       result = Data.load(Advent.Y2025.FirstDay, filename: "fake_file.datum")
       assert {:error, :enoent} = result

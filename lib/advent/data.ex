@@ -36,29 +36,23 @@ defmodule Advent.Data do
   """
   def load(module_name, opts \\ []) when is_atom(module_name) do
     filename = Keyword.get(opts, :filename, @default_filename)
-    file_path = module_to_path(module_name, filename)
 
-    case File.read(file_path) do
-      {:ok, content} ->
-        lines =
-          content
-          |> String.split("\n")
-          |> Enum.reject(&(String.trim(&1) == ""))
+    with {:ok, filename} <- validate_filename(filename),
+         file_path <- module_to_path(module_name, filename),
+         {:ok, content} <- File.read(file_path) do
+      lines =
+        content
+        |> String.split("\n")
+        |> Enum.reject(&(String.trim(&1) == ""))
 
-        {:ok, lines}
-
-      {:error, reason} ->
-        {:error, reason}
+      {:ok, lines}
     end
   end
 
   def load!(module_name, opts \\ []) do
     case load(module_name, opts) do
       {:ok, content} -> content
-      {:error, reason} ->
-        filename = Keyword.get(opts, :filename, @default_filename)
-        file_path = module_to_path(module_name, filename)
-        raise File.Error.exception(reason: reason, action: "read file", path: file_path)
+      {:error, reason} -> raise reason
     end
   end
 
@@ -81,8 +75,10 @@ defmodule Advent.Data do
   ## Examples
 
       iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay)
+      "data/y_2025/first_day/sample.dat"
 
       iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay, "input.dat")
+      "data/y_2025/first_day/input.dat"
 
   """
   def module_to_path(module_name, filename \\ @default_filename) do
@@ -94,12 +90,18 @@ defmodule Advent.Data do
       path -> path
     end
     |> Enum.map(&convert_part/1)
-    |> then(fn parts ->
-      safe = Path.basename(filename)
-      base = Path.expand(Path.join(["data" | parts]))
-      path = Path.expand(Path.join(base, safe))
-      if String.starts_with?(path, base), do: path, else: {:error, :invalid_path}
-    end)
+    |> then(fn parts -> [filename | Enum.reverse(["data" | parts])] |> Enum.reverse() end)
+    |> Path.join()
+  end
+
+  defp validate_filename(filename) when is_binary(filename) do
+    case String.contains?(filename, ["\\", "/"]) do
+      true ->
+        {:error, "Passing a path to a data file is prohibited. Must pass only the filename."}
+
+      false ->
+        {:ok, filename}
+    end
   end
 
   # Convert module name parts to file path segments
