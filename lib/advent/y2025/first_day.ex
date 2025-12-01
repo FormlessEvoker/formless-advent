@@ -17,7 +17,7 @@ defmodule Advent.Y2025.FirstDay do
   ## Examples
 
       iex> Advent.Y2025.FirstDay.solve(["L50", "R14"])
-      {:ok, 1}
+      {:ok, [{:left, 50}, {:right, 14}]}
 
   """
   def solve(lines) when is_list(lines) do
