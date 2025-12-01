@@ -5,18 +5,16 @@ defmodule Advent.Y2025.FirstDayTest do
   alias Advent.Y2025.FirstDay
 
   describe "solve/1" do
-    test "returns :ok for empty list" do
+    test "returns value for empty list" do
       assert FirstDay.solve([]) == {:ok, []}
     end
 
-    test "returns :ok for list with strings" do
-      # assert FirstDay.solve(["L50", "R99"]) == :ok
-
-      assert {:error, _} = FirstDay.solve(["L7", "weanies"])
+    test "returns for list with strings" do
+      assert {:ok, _} = FirstDay.solve(["L50", "R99"])
     end
 
-    # test "raises when input is bad" do
-    #   assert_raise
-    # end
+    test "returns an error when input is bad" do
+      assert {:error, _} = FirstDay.solve(["L7", "weanies"])
+    end
   end
 end
