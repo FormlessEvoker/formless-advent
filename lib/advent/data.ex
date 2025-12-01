@@ -43,7 +43,7 @@ defmodule Advent.Data do
         lines =
           content
           |> String.split("\n")
-          |> Enum.reject(&(&1 == ""))
+          |> Enum.reject(&(String.trim(&1) == ""))
 
         {:ok, lines}
 
