@@ -4,8 +4,9 @@ defmodule Advent do
   """
 
   @doc """
-  Hello world.
+  Loads puzzle data and executes the solution for the given Advent of Code module.
 
+  The module should implement a `solve/1` function that accepts the loaded data.
   ## Examples
 
       iex> {:ok, _} = Advent.run(Advent.Y2025.FirstDay)
