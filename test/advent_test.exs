@@ -3,6 +3,6 @@ defmodule AdventTest do
   doctest Advent
 
   test "greets the world" do
-    assert Advent.run(Y2025.FirstDay) == :ok
+    assert {:ok, _} = Advent.run(Y2025.FirstDay)
   end
 end
