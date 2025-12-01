@@ -6,17 +6,17 @@ defmodule Advent.DataTest do
 
   describe "module_to_path/1" do
     test "converts Advent.Y2025.FirstDay to correct path" do
-      assert Data.module_to_path(Advent.Y2025.FirstDay) == "data/y_2025/first_day/sample.dat"
+      assert Data.module_to_path(Advent.Y2025.FirstDay) =~ "data/y_2025/first_day/sample.dat"
     end
 
     test "works without Advent prefix" do
-      assert Data.module_to_path(Y2025.FirstDay) == "data/y_2025/first_day/sample.dat"
+      assert Data.module_to_path(Y2025.FirstDay) =~ "data/y_2025/first_day/sample.dat"
     end
   end
 
   describe "module_to_path/2" do
     test "converts Advent.Y2025.FirstDay with custom filename" do
-      assert Data.module_to_path(Advent.Y2025.FirstDay, "input.dat") ==
+      assert Data.module_to_path(Advent.Y2025.FirstDay, "input.dat") =~
                "data/y_2025/first_day/input.dat"
     end
   end

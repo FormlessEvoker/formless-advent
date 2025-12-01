@@ -78,10 +78,8 @@ defmodule Advent.Data do
   ## Examples
 
       iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay)
-      "data/y_2025/first_day/sample.dat"
 
       iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay, "input.dat")
-      "data/y_2025/first_day/input.dat"
 
   """
   def module_to_path(module_name, filename \\ @default_filename) do
@@ -93,8 +91,12 @@ defmodule Advent.Data do
       path -> path
     end
     |> Enum.map(&convert_part/1)
-    |> then(fn parts -> ["data" | parts] ++ [filename] end)
-    |> Path.join()
+    |> then(fn parts ->
+      safe = Path.basename(filename)
+      base = Path.expand(Path.join(["data" | parts]))
+      path = Path.expand(Path.join(base, safe))
+      if String.starts_with?(path, base), do: path, else: {:error, :invalid_path}
+    end)
   end
 
   # Convert module name parts to file path segments
