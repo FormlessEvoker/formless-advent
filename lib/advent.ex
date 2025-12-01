@@ -8,8 +8,7 @@ defmodule Advent do
 
   ## Examples
 
-      iex> Advent.run(Advent.Y2025.FirstDay)
-      :ok
+      iex> {:ok, _} = Advent.run(Advent.Y2025.FirstDay)
 
   """
   def run(module_name) do
