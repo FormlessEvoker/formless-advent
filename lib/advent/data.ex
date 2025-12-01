@@ -54,9 +54,8 @@ defmodule Advent.Data do
       {:ok, content} ->
         content
 
-      {:error, "Passing a path to a data file is prohibited. Must pass only the filename."} =
-          error ->
-        raise ArgumentError, elem(error, 1)
+      {:error, msg} when is_binary(msg) ->
+        raise ArgumentError, msg
 
       {:error, reason} ->
         filename = Keyword.get(opts, :filename, @default_filename)
@@ -104,9 +103,9 @@ defmodule Advent.Data do
   end
 
   defp validate_filename(filename) when is_binary(filename) do
-    # Only allow alphanumeric characters, underscores, hyphens, dots, and spaces
+    # Only allow alphanumeric characters, underscores, hyphens, and dots
     # This prevents path traversal while allowing reasonable filenames
-    if String.match?(filename, ~r/^[a-zA-Z0-9_\-. ]+$/) and
+    if String.match?(filename, ~r/^[a-zA-Z0-9_\-.]+$/) and
          not String.contains?(filename, ["\\", "/", ".."]) do
       {:ok, filename}
     else
