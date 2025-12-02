@@ -49,6 +49,37 @@ defmodule Advent.Data do
     end
   end
 
+  @doc """
+  Loads puzzle data for a given module, raising an exception on error.
+
+  This is the bang variant of `load/2`. It behaves the same way but raises
+  an exception instead of returning an error tuple when file loading fails.
+
+  ## Parameters
+
+    - module_name: The module atom (e.g., `Advent.Y2025.FirstDay`)
+    - opts: Keyword list of options
+      - `:filename` - The data file name to load (default: "#{@default_filename}")
+
+  ## Returns
+
+    - A list of strings (one per line) on success
+
+  ## Raises
+
+    - `ArgumentError` if the filename is invalid (contains path separators or invalid characters)
+    - `File.Error` if the file cannot be read (e.g., file not found, permission denied)
+
+  ## Examples
+
+      iex> lines = Advent.Data.load!(Advent.Y2025.FirstDay)
+      iex> is_list(lines)
+      true
+
+      iex> Advent.Data.load!(Advent.Y2025.FirstDay, filename: "../../etc/passwd")
+      ** (ArgumentError) Passing a path to a data file is prohibited. Must pass only the filename.
+
+  """
   def load!(module_name, opts \\ []) do
     case load(module_name, opts) do
       {:ok, content} ->
