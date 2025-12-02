@@ -9,7 +9,7 @@ defmodule AdventTest do
   end
 
   describe "run/2" do
-    test "Runs the specified module with the specified dataset" do
+    test "runs the specified module with the specified dataset" do
       assert {:ok, ["I'm a little teapot"]} = Advent.run(Y2025.NthDay, "teapot.dat")
     end
   end
