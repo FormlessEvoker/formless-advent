@@ -1,16 +1,16 @@
 defmodule Advent.DataTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Advent.Data
 
   alias Advent.Data
 
   describe "module_to_path/1" do
     test "converts Advent.Y2025.FirstDay to correct path" do
-      assert Data.module_to_path(Advent.Y2025.FirstDay) =~ "data/y_2025/first_day/sample.dat"
+      assert Data.module_to_path(Advent.Y2025.FirstDay) =~ "data/y_2025/first_day/input.dat"
     end
 
     test "works without Advent prefix" do
-      assert Data.module_to_path(Y2025.FirstDay) =~ "data/y_2025/first_day/sample.dat"
+      assert Data.module_to_path(Y2025.FirstDay) =~ "data/y_2025/first_day/input.dat"
     end
   end
 

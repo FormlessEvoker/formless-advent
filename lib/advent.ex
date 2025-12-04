@@ -47,13 +47,10 @@ defmodule Advent do
   defp advent_module(module_name) when is_atom(module_name) do
     Module.split(module_name)
     |> advent_module()
+    |> Module.concat()
   end
 
-  defp advent_module(["Advent" | _] = parts) do
-    Module.concat(parts)
-  end
+  defp advent_module(["Advent" | _] = parts), do: parts
 
-  defp advent_module(parts) when is_list(parts) do
-    Module.concat(["Advent" | parts])
-  end
+  defp advent_module(parts) when is_list(parts), do: ["Advent" | parts]
 end

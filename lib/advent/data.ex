@@ -7,7 +7,7 @@ defmodule Advent.Data do
   `Advent.Y<YEAR>.<DayName>` (e.g., `Advent.Y2025.FirstDay`).
   """
 
-  @default_filename "sample.dat"
+  @default_filename "input.dat"
 
   @doc """
   Loads puzzle data for a given module.
@@ -30,7 +30,7 @@ defmodule Advent.Data do
 
       iex> {:ok, _} = Advent.Data.load(Advent.Y2025.FirstDay)
 
-      iex> Advent.Data.load(Advent.Y2025.FirstDay, filename: "input.dat")
+      iex> Advent.Data.load(Advent.Y2025.FirstDay, filename: "garbage.dat")
       {:error, :enoent}
 
   """
@@ -105,7 +105,7 @@ defmodule Advent.Data do
   ## Parameters
 
     - module_name: The module atom (e.g., `Advent.Y2025.FirstDay`)
-    - filename: The data file name (default: "sample.dat")
+    - filename: The data file name (default: "input.dat")
 
   ## Returns
 
@@ -114,10 +114,10 @@ defmodule Advent.Data do
   ## Examples
 
       iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay)
-      "data/y_2025/first_day/sample.dat"
-
-      iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay, "input.dat")
       "data/y_2025/first_day/input.dat"
+
+      iex> Advent.Data.module_to_path(Advent.Y2025.FirstDay, "sample.dat")
+      "data/y_2025/first_day/sample.dat"
 
   """
   def module_to_path(module_name, filename \\ @default_filename) do
